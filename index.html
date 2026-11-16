@@ -65,6 +65,8 @@ input:focus,textarea:focus,select:focus{outline:2px solid var(--g)}
 
 .top{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:start;margin-bottom:8px}.top>.card,.top>.col{margin:0}
 @media(max-width:760px){.top{grid-template-columns:1fr}}
+#calCard.cc .legend,#calCard.cc .scroll,#calCard.cc .bar select,#calCard.cc .bar .ghost{display:none}
+#calCard.cc .bar{margin-bottom:0}
 #wkToggle{cursor:pointer;user-select:none;display:flex;justify-content:space-between;align-items:center}#wkToggle:focus-visible{outline:2px solid var(--g)}
 /* ---------- 3 columns ---------- */
 .cols{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:8px}
@@ -134,9 +136,9 @@ input:focus,textarea:focus,select:focus{outline:2px solid var(--g)}
   </div>
 
   <!-- CALENDAR -->
-  <div class="card">
+  <div class="card" id="calCard">
     <div class="bar">
-      <div class="ttl">52-Week Calendar</div>
+      <div class="ttl" id="calToggle" role="button" tabindex="0" aria-expanded="true" style="cursor:pointer;user-select:none">52-Week Calendar <span id="calChev">&#9660;</span></div>
       <select id="filter"><option value="">All athletes</option></select>
       <button class="ghost" id="goToday">Today</button>
     </div>
@@ -283,6 +285,12 @@ input:focus,textarea:focus,select:focus{outline:2px solid var(--g)}
   function wkFlip(){wkC=!wkC;wkApply(wkC);try{localStorage.setItem(WK,wkC?'1':'0');}catch(e){}}
   $('wkToggle').onclick=wkFlip;
   $('wkToggle').onkeydown=function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();wkFlip();}};
+  var CK='sts_cal_collapsed',calC=false;try{calC=localStorage.getItem(CK)==='1';}catch(e){}
+  function calApply(){$('calCard').classList.toggle('cc',calC);$('calChev').innerHTML=calC?'&#9654;':'&#9660;';$('calToggle').setAttribute('aria-expanded',calC?'false':'true');}
+  function calFlip(){calC=!calC;calApply();try{localStorage.setItem(CK,calC?'1':'0');}catch(e){}}
+  calApply();
+  $('calToggle').onclick=calFlip;
+  $('calToggle').onkeydown=function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();calFlip();}};
   function renderAll(){hint();renderNames();renderCal();renderCols();}
   var tt;function toast(m){var t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(function(){t.classList.remove('show');},1800);}
   renderAll();
