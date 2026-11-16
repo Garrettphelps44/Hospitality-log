@@ -64,7 +64,7 @@ input:focus,textarea:focus,select:focus{outline:2px solid var(--g)}
 .c.sel .dot{background:#000}
 
 /* ---------- 3 columns ---------- */
-.cols{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.cols{display:grid;grid-template-columns:1fr;gap:12px}
 .col{background:var(--p1);border:1px solid var(--ln);border-radius:12px;padding:14px;min-width:0}
 .col h3{margin:0;font-size:12px;text-transform:uppercase;letter-spacing:1.4px;color:var(--g);font-weight:800}
 .col .dsub{color:var(--mu);font-size:12px;margin:2px 0 12px}
@@ -142,12 +142,10 @@ input:focus,textarea:focus,select:focus{outline:2px solid var(--g)}
   </div>
 
   <!-- 3 COLUMNS -->
-  <div class="swipe">swipe → week · session</div>
-  <div class="cols">
+    <div class="cols">
     <div class="col"><h3>Week Overview Notes</h3><div class="dsub" id="weekLbl"></div>
       <div id="weekList"></div>
       <div class="sec">Week at a glance</div><div id="glance"></div></div>
-    <div class="col"><h3>Training Session</h3><div class="dsub" id="sesLbl"></div><div id="sesBody"></div></div>
   </div>
 </div>
 <div class="toast" id="toast"></div>
@@ -174,13 +172,6 @@ input:focus,textarea:focus,select:focus{outline:2px solid var(--g)}
   var LET={0:'A',1:'B',3:'C',4:'D'};
   function letterFor(d){return LET[(d.getDay()+6)%7]||'';}
 
-  /* EXAMPLE sessions — swap for real program output later */
-  var SES={
-    A:{name:'Session A',focus:'Squat day — anchor lift',ex:[['Core 4 Movement Prep','6 min'],['Back Squat','4 × 5',1],['Romanian Deadlift','3 × 8'],['Split Squat','3 × 8 / side'],['Chin-Up','3 × 6'],['Plank','3 × 30s']]},
-    B:{name:'Session B',focus:'Press & pull',ex:[['Core 4 Movement Prep','6 min'],['Bench Press','4 × 5'],['1-Arm DB Row','3 × 10 / side'],['Half-Kneeling Landmine Press','3 × 8 / side'],['Face Pull','3 × 12'],['Pallof Press','3 × 10 / side']]},
-    C:{name:'Session C',focus:'Hinge day',ex:[['Core 4 Movement Prep','6 min'],['Trap Bar Deadlift','4 × 4'],['Front Foot Elevated Split Squat','3 × 8 / side'],['Push-Up','3 × 12'],['Cable Row','3 × 10'],['Side Plank','3 × 25s / side']]},
-    D:{name:'Session D',focus:'Single-leg & speed',ex:[['Core 4 Movement Prep','6 min'],['Box Jump','4 × 3'],['Front Squat','3 × 5'],['Walking Lunge','3 × 10 / side'],['Lat Pulldown','3 × 10'],['Farmer Carry','3 × 30 yds']]}
-  };
 
   function load(){try{var r=localStorage.getItem(KEY);if(r){var o=JSON.parse(r);if(!o.demo)return o;}}catch(e){}return seed();}
   function save(){try{localStorage.setItem(KEY,JSON.stringify(data));}catch(e){}}
@@ -273,16 +264,6 @@ input:focus,textarea:focus,select:focus{outline:2px solid var(--g)}
     }
     $('glance').innerHTML=g;
 
-    var L2=letterFor(sd),inW=sd>=start&&sd<=end;
-    if(L2&&SES[L2]){
-      var s=SES[L2];
-      $('sesLbl').textContent=s.name+' · '+s.focus;
-      $('sesBody').innerHTML=s.ex.map(function(x){return '<div class="ex"><span>'+x[0]+(x[2]?'<span class="an">ANCHOR</span>':'')+'</span><span class="sr">'+x[1]+'</span></div>';}).join('')+
-        '<div class="exnote">Example only. This will pull from the 52-week program output.</div>';
-    }else{
-      $('sesLbl').textContent='Rest / off day';
-      $('sesBody').innerHTML='<div class="empty">No lifting session scheduled. Good day for conditioning or a recovery check-in.</div>';
-    }
   }
   document.addEventListener('click',function(e){
     var g=e.target.closest('.glance');
