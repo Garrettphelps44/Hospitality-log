@@ -132,7 +132,6 @@ input:focus,textarea:focus,select:focus{outline:2px solid var(--g)}
       <div class="ttl">52-Week Calendar</div>
       <select id="filter"><option value="">All athletes</option></select>
       <button class="ghost" id="goToday">Today</button>
-      <button class="ghost" id="clearDemo">Clear demo</button>
     </div>
     <div class="legend">
       <span><i style="background:var(--g)"></i>Lifting day</span>
@@ -183,28 +182,9 @@ input:focus,textarea:focus,select:focus{outline:2px solid var(--g)}
     D:{name:'Session D',focus:'Single-leg & speed',ex:[['Core 4 Movement Prep','6 min'],['Box Jump','4 × 3'],['Front Squat','3 × 5'],['Walking Lunge','3 × 10 / side'],['Lat Pulldown','3 × 10'],['Farmer Carry','3 × 30 yds']]}
   };
 
-  function load(){try{var r=localStorage.getItem(KEY);if(r)return JSON.parse(r);}catch(e){}return seed();}
+  function load(){try{var r=localStorage.getItem(KEY);if(r){var o=JSON.parse(r);if(!o.demo)return o;}}catch(e){}return seed();}
   function save(){try{localStorage.setItem(KEY,JSON.stringify(data));}catch(e){}}
-  function seed(){
-    var names=['Jake Miller','Ava Torres','Noah Reed','Mia Johnson','Liam Carter','Olivia Brooks','Ethan Walker','Sophia Nguyen','Mason Hill','Isabella Cruz','Logan Perry','Emma Foster','Caleb Rivera','Harper Bell','Owen Price','Lily Hughes','Wyatt Ross','Chloe Ward','Dylan Cooper','Grace Powell','Carter James','Zoe Murphy','Tyler Evans','Ella Stewart','Hunter Gray','Nora Diaz','Jaxon Long','Layla Scott','Bryce Adams','Maya Collins'];
-    var dayNotes=['Grandma is in the hospital. Ask how she is doing.','College visit this weekend. Ask how it went.','Nervous about a chem test. Check in after.','Had a big game last night. Ask how it felt.','Got her driver license. Congratulate her.','Dog had surgery. Ask how he is recovering.','Tryouts are today. Wish him luck.','Parents are going through a move. Check in.','Struggling with a sore shoulder. Ask how it feels.','Got a new job after school. Ask how it is going.','Little brother was born. Ask about the baby.','Missed practice for a family funeral. Check in gently.','Committed to a school. Celebrate with him.','Bombed a quiz. Encourage her.','Starting the new season. Ask how he is feeling.','Birthday is today. Wish happy birthday.','Going on a mission trip. Ask about it when back.','Her team won state. Congratulate her.','Dad is back from deployment. Ask about it.','Dealing with a friend issue. Ask how things are.','Prom this weekend. Ask about it.','Went to the dentist. Ask if all good.','Has a big presentation. Ask how it went.','Hit a squat PR. Celebrate it.'];
-    var weekNotes=['Birthday this week. Wish happy birthday.','Midterms this week. Encourage him.','Big tournament this weekend. Ask about it.','Family is visiting from out of state. Ask about it.','Recovering from a cold. Check energy.','Has a recital this week. Ask how it went.','Applying to colleges. Ask about progress.','Tough week at home. Check in gently.'];
-    var r=7;function rnd(){r=(r*9301+49297)%233280;return r/233280;}
-    function pick(a){return a[Math.floor(rnd()*a.length)];}
-    var items=[],id=1;
-    for(var w=0;w<52;w++){
-      var ws=addDays(start,w*7);
-      for(var d=0;d<7;d++){
-        var dt=addDays(ws,d);
-        if(dt<today)continue;
-        var cnt=d>=5?(rnd()<.25?1:0):(rnd()<.8?1+Math.floor(rnd()*3):0);
-        for(var c=0;c<cnt;c++)items.push({id:id++,athlete:pick(names),field:'',note:pick(dayNotes),type:'day',date:key(dt),done:false});
-      }
-      var wc=rnd()<.6?1+Math.floor(rnd()*2):0;
-      for(var c2=0;c2<wc;c2++)items.push({id:id++,athlete:pick(names),field:'',note:pick(weekNotes),type:'week',date:key(ws),done:false});
-    }
-    return {demo:true,items:items};
-  }
+  function seed(){return {demo:false,items:[]};}
   function nextId(){var m=0;data.items.forEach(function(i){if(i.id>m)m=i.id;});return m+1;}
 
   /* ---------- form ---------- */
@@ -222,7 +202,6 @@ input:focus,textarea:focus,select:focus{outline:2px solid var(--g)}
     save();selected=v;$('note').value='';renderAll();toast('Added for '+a);
   };
   $('filter').onchange=function(){filter=this.value;renderAll();};
-  $('clearDemo').onclick=function(){data={demo:false,items:[]};save();renderAll();toast('Calendar cleared');};
   $('goToday').onclick=function(){selected=todayK;renderAll();};
 
   function visible(){return data.items.filter(function(i){return !filter||i.athlete===filter;});}
