@@ -134,7 +134,6 @@ input:focus,textarea:focus,select:focus{outline:2px solid var(--g)}
       <button class="ghost" id="goToday">Today</button>
     </div>
     <div class="legend">
-      <span><i style="background:var(--g)"></i>Lifting day</span>
       <span><i style="background:var(--amb);border-radius:50%;width:8px;height:8px"></i>Day note</span>
       <span><i style="background:var(--amb);height:3px;vertical-align:2px"></i>Week note</span>
     </div>
@@ -170,7 +169,7 @@ input:focus,textarea:focus,select:focus{outline:2px solid var(--g)}
 
   /* Mon A, Tue B, Thu C, Fri D (matches the 52-week program) */
   var LET={0:'A',1:'B',3:'C',4:'D'};
-  function letterFor(d){return LET[(d.getDay()+6)%7]||'';}
+  function letterFor(d){return '';}
 
 
   function load(){try{var r=localStorage.getItem(KEY);if(r){var o=JSON.parse(r);if(!o.demo)return o;}}catch(e){}return seed();}
